@@ -60,10 +60,15 @@ body {
 
 /* Hormati preferensi reduce-motion */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not(.animate-marquee), *:not(.animate-marquee)::before, *:not(.animate-marquee)::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  /* Marquee tetap berjalan tapi lebih lambat agar tidak mengganggu */
+  .animate-marquee {
+    animation-duration: 60s !important;
+    animation-iteration-count: infinite !important;
   }
 }
