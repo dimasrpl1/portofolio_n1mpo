@@ -51,7 +51,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     <motion.div
       ref={containerRef}
       // h-dvh = fallback CSS sebelum JS mengukur (langsung di-override oleh effect)
-      className="fixed inset-x-0 top-0 z-100 flex h-svh flex-col justify-end bg-bg px-6 md:px-10"
+      className="fixed inset-x-0 top-0 z-100 flex h-svh flex-col justify-end overflow-hidden bg-bg px-6 md:px-10"
       style={{
         paddingBottom:
           "max(2.5rem, calc(env(safe-area-inset-bottom) + 1.5rem))",

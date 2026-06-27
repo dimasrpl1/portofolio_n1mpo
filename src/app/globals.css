@@ -35,7 +35,7 @@
 
 * { border-color: var(--color-line); }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   background: var(--color-bg);
