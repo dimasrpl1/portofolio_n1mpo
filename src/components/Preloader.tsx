@@ -12,10 +12,6 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     const el = containerRef.current;
     if (!el) return;
 
-    // Langsung set ke DOM — tidak perlu setState, tidak ada cascading render
-    // React tidak akan reset ini karena height tidak ada di style prop
-    el.style.height = `${window.innerHeight}px`;
-
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const total = reduce ? 200 : 1300;
     let r1 = 0;
@@ -55,7 +51,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     <motion.div
       ref={containerRef}
       // h-dvh = fallback CSS sebelum JS mengukur (langsung di-override oleh effect)
-      className="fixed inset-x-0 top-0 z-100 flex h-dvh flex-col justify-end bg-bg px-6 md:px-10"
+      className="fixed inset-x-0 top-0 z-100 flex h-svh flex-col justify-end bg-bg px-6 md:px-10"
       style={{
         paddingBottom:
           "max(2.5rem, calc(env(safe-area-inset-bottom) + 1.5rem))",
