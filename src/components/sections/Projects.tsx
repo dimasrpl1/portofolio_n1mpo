@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { projects, type Project } from "@/data/projects";
@@ -21,39 +21,42 @@ export function Projects() {
     { kind: "projects"; data: Project } | { kind: "certificates"; data: Certificate } | null
   >(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
 
   const currentItems = tab === "projects" ? projects : certificates;
 
+  // Throttle dengan RAF supaya getBoundingClientRect tidak dipanggil tiap event scroll
   const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      const el = scrollRef.current;
+      if (!el) return;
 
-    const isAtEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 8;
-    setAtStart(el.scrollLeft < 8);
-    setAtEnd(isAtEnd);
+      const isAtEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 8;
+      setAtStart(el.scrollLeft < 8);
+      setAtEnd(isAtEnd);
 
-    const articles = el.querySelectorAll("article");
+      const articles = el.querySelectorAll("article");
 
-    // Saat sudah di ujung kanan, langsung set ke card terakhir
-    if (isAtEnd) {
-      setActiveIndex(articles.length - 1);
-      return;
-    }
-
-    // getBoundingClientRect lebih akurat karena tidak bergantung pada offsetParent
-    const containerLeft = el.getBoundingClientRect().left;
-    const padding = window.innerWidth >= 768 ? 40 : 24;
-    let closest = 0;
-    let minDist = Infinity;
-    articles.forEach((card, i) => {
-      const dist = Math.abs(card.getBoundingClientRect().left - containerLeft - padding);
-      if (dist < minDist) {
-        minDist = dist;
-        closest = i;
+      if (isAtEnd) {
+        setActiveIndex(articles.length - 1);
+        return;
       }
+
+      const containerLeft = el.getBoundingClientRect().left;
+      const padding = window.innerWidth >= 768 ? 40 : 24;
+      let closest = 0;
+      let minDist = Infinity;
+      articles.forEach((card, i) => {
+        const dist = Math.abs(card.getBoundingClientRect().left - containerLeft - padding);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+      setActiveIndex(closest);
     });
-    setActiveIndex(closest);
   }, []);
+
+  // Cleanup RAF saat unmount
+  useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
   const scrollToIndex = (i: number) => {
     const el = scrollRef.current;
@@ -151,15 +154,15 @@ export function Projects() {
               ? projects.map((p, i) => (
                   <motion.article
                     key={p.id}
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
                     viewport={{ once: true, margin: "-40px" }}
-                    transition={{ duration: 0.5, delay: i * 0.06, ease }}
+                    transition={{ duration: 0.45, delay: i * 0.05, ease }}
                     onClick={() => setSelected({ kind: "projects", data: p })}
                     className="group flex-none w-[78vw] cursor-pointer snap-start
                       overflow-hidden rounded-2xl border border-line bg-card
-                      transition-[transform,box-shadow] duration-300
-                      hover:-translate-y-1 hover:shadow-xl
+                      transition-transform duration-200
+                      hover:-translate-y-1
                       sm:w-72 md:w-80 lg:w-96"
                   >
                     <div className="relative aspect-16/10 overflow-hidden">
@@ -201,15 +204,15 @@ export function Projects() {
               : certificates.map((c, i) => (
                   <motion.article
                     key={c.id}
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
                     viewport={{ once: true, margin: "-40px" }}
-                    transition={{ duration: 0.5, delay: i * 0.06, ease }}
+                    transition={{ duration: 0.45, delay: i * 0.05, ease }}
                     onClick={() => setSelected({ kind: "certificates", data: c })}
                     className="group flex-none w-[72vw] cursor-pointer snap-start
                       overflow-hidden rounded-2xl border border-line bg-card
-                      transition-[transform,box-shadow] duration-300
-                      hover:-translate-y-1 hover:shadow-xl
+                      transition-transform duration-200
+                      hover:-translate-y-1
                       sm:w-60 md:w-68"
                   >
                     <div className="relative aspect-4/3 overflow-hidden bg-muted/5">
@@ -314,7 +317,7 @@ export function Projects() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22 }}
             onClick={() => setSelected(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
           >
             <motion.div
               key="modal"
@@ -351,7 +354,7 @@ function CloseBtn({ onClose }: { onClose: () => void }) {
       onClick={onClose}
       aria-label="Tutup"
       className="absolute right-3 top-3 z-10 grid size-8 place-items-center rounded-full
-        bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
+        bg-black/60 text-white transition-colors hover:bg-black/80"
     >
       <X className="size-4" />
     </button>

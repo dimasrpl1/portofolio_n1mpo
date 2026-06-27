@@ -58,6 +58,22 @@ body {
   mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
 }
 
+/* Hero: scroll indicator bounce — CSS saja, tanpa JS */
+@keyframes scroll-dot {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(5px); }
+}
+.animate-scroll-dot { animation: scroll-dot 1.6s ease-in-out infinite; }
+
+/* Hero: ambient background — static radial gradient, nol JS nol repaint */
+.hero-glow {
+  background:
+    radial-gradient(ellipse 55% 45% at 12% 18%,
+      color-mix(in srgb, var(--color-fg) 5%, transparent) 0%, transparent 100%),
+    radial-gradient(ellipse 50% 60% at 88% 82%,
+      color-mix(in srgb, var(--color-fg) 4%, transparent) 0%, transparent 100%);
+}
+
 /* Hormati preferensi reduce-motion */
 @media (prefers-reduced-motion: reduce) {
   *:not(.animate-marquee), *:not(.animate-marquee)::before, *:not(.animate-marquee)::after {

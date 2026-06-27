@@ -34,7 +34,7 @@ export function Navbar() {
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 md:px-10">
         <a href="#hero" className="font-display text-lg font-bold tracking-tight">
-          N<span className="text-muted">.</span>
+          n1mpo<span className="text-muted">.</span>
         </a>
 
         <ul className="hidden items-center gap-8 md:flex">
