@@ -7,7 +7,7 @@ import { GithubIcon, LinkedinIcon } from "../icons";
 const socials = [
   { href: "mailto:muhdimassusanto12@gmail.com", label: "Email", Icon: Mail },
   { href: "https://github.com/dimasrpl1", label: "GitHub", Icon: GithubIcon },
-  { href: "https://linkedin.com/in/username", label: "LinkedIn", Icon: LinkedinIcon },
+  { href: "https://www.linkedin.com/in/dimas-susanto-184a0a35a/", label: "LinkedIn", Icon: LinkedinIcon },
 ];
 
 export function Footer() {
