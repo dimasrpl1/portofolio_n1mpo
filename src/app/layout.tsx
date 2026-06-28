@@ -16,11 +16,11 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nama Anda — Portfolio",
-  description: "Personal portfolio. Frontend developer.",
+  title: "n1mpo",
+  description: "Personal portfolio. Fullstack developer.",
   openGraph: {
-    title: "Nama Anda — Portfolio",
-    description: "Personal portfolio. Frontend developer.",
+    title: "n1mpo",
+    description: "Personal portfolio. Fullstack developer.",
     type: "website",
   },
 };

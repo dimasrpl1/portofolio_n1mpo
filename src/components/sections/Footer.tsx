@@ -5,8 +5,8 @@ import { Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "../icons";
 
 const socials = [
-  { href: "mailto:email@anda.com", label: "Email", Icon: Mail },
-  { href: "https://github.com/username", label: "GitHub", Icon: GithubIcon },
+  { href: "mailto:muhdimassusanto12@gmail.com", label: "Email", Icon: Mail },
+  { href: "https://github.com/dimasrpl1", label: "GitHub", Icon: GithubIcon },
   { href: "https://linkedin.com/in/username", label: "LinkedIn", Icon: LinkedinIcon },
 ];
 
@@ -24,10 +24,10 @@ export function Footer() {
             Mari terhubung
           </p>
           <a
-            href="mailto:email@anda.com"
+            href="mailto:muhdimassusanto12@gmail.com"
             className="mt-4 block font-display text-4xl font-semibold tracking-tight transition-colors hover:text-muted md:text-7xl"
           >
-            email@anda.com
+            muhdimassusanto12@gmail.com
           </a>
 
           <div className="mt-12 flex flex-wrap items-center gap-3">
@@ -45,7 +45,7 @@ export function Footer() {
           </div>
 
           <div className="mt-16 flex flex-col items-start justify-between gap-2 border-t border-line pt-6 text-xs text-muted md:flex-row md:items-center">
-            <span>© {new Date().getFullYear()} Nama Anda. All rights reserved.</span>
+            <span>© {new Date().getFullYear()} n1mpo. All rights reserved.</span>
             <span className="font-mono">Built with Next.js</span>
           </div>
         </motion.div>

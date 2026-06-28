@@ -23,6 +23,39 @@ export function Projects() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
 
+  // Drag-to-scroll — window listener, tanpa setPointerCapture supaya click kartu tetap jalan
+  const didDrag = useRef(false);
+
+  const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") return;
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const startX = e.clientX;
+    const scrollStart = el.scrollLeft;
+    didDrag.current = false;
+
+    el.style.cursor = "grabbing";
+    el.style.userSelect = "none";
+    el.style.scrollSnapType = "none";
+
+    function onMove(ev: PointerEvent) {
+      const dx = ev.clientX - startX;
+      if (Math.abs(dx) > 4) didDrag.current = true;
+      el!.scrollLeft = scrollStart - dx;
+    }
+
+    function onUp() {
+      el!.style.cursor = "grab";
+      el!.style.userSelect = "";
+      requestAnimationFrame(() => { el!.style.scrollSnapType = ""; });
+      window.removeEventListener("pointermove", onMove);
+    }
+
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp, { once: true });
+  }, []);
+
   const currentItems = tab === "projects" ? projects : certificates;
 
   // Throttle dengan RAF supaya getBoundingClientRect tidak dipanggil tiap event scroll
@@ -55,7 +88,6 @@ export function Projects() {
     });
   }, []);
 
-  // Cleanup RAF saat unmount
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
   const scrollToIndex = (i: number) => {
@@ -142,13 +174,14 @@ export function Projects() {
             key={tab}
             ref={scrollRef}
             onScroll={handleScroll}
+            onPointerDown={onPointerDown}
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.35, ease }}
-            className="flex gap-5 overflow-x-auto scroll-smooth px-6 pb-4 pt-2 md:px-10
+            className="flex gap-5 overflow-x-auto px-6 pb-4 pt-2 md:px-10
               scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
-              snap-x snap-mandatory"
+              snap-x snap-mandatory cursor-grab"
           >
             {tab === "projects"
               ? projects.map((p, i) => (
@@ -158,7 +191,7 @@ export function Projects() {
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true, margin: "-40px" }}
                     transition={{ duration: 0.45, delay: i * 0.05, ease }}
-                    onClick={() => setSelected({ kind: "projects", data: p })}
+                    onClick={() => { if (didDrag.current) return; setSelected({ kind: "projects", data: p }); }}
                     className="group flex-none w-[78vw] cursor-pointer snap-start
                       overflow-hidden rounded-2xl border border-line bg-card
                       transition-transform duration-200
@@ -170,6 +203,7 @@ export function Projects() {
                         src={p.image}
                         alt={p.title}
                         fill
+                        draggable={false}
                         sizes="(max-width: 640px) 78vw, 384px"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
@@ -208,7 +242,7 @@ export function Projects() {
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true, margin: "-40px" }}
                     transition={{ duration: 0.45, delay: i * 0.05, ease }}
-                    onClick={() => setSelected({ kind: "certificates", data: c })}
+                    onClick={() => { if (didDrag.current) return; setSelected({ kind: "certificates", data: c }); }}
                     className="group flex-none w-[72vw] cursor-pointer snap-start
                       overflow-hidden rounded-2xl border border-line bg-card
                       transition-transform duration-200
@@ -220,6 +254,7 @@ export function Projects() {
                         src={c.image}
                         alt={c.title}
                         fill
+                        draggable={false}
                         sizes="(max-width: 640px) 72vw, 272px"
                         className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
                       />
@@ -365,7 +400,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
   return (
     <>
       <div className="relative aspect-video overflow-hidden rounded-t-2xl">
-        <Image src={project.image} alt={project.title} fill className="object-cover" />
+        <Image src={project.image} alt={project.title} fill draggable={false} className="object-cover" />
         <CloseBtn onClose={onClose} />
       </div>
       <div className="p-6">
@@ -417,7 +452,7 @@ function CertificateDetail({ cert, onClose }: { cert: Certificate; onClose: () =
     <>
       <div className="relative overflow-hidden rounded-t-2xl bg-muted/5 px-8 pb-4 pt-8">
         <div className="relative aspect-4/3 overflow-hidden">
-          <Image src={cert.image} alt={cert.title} fill className="object-contain" />
+          <Image src={cert.image} alt={cert.title} fill draggable={false} className="object-contain" />
         </div>
         <CloseBtn onClose={onClose} />
       </div>

@@ -11,8 +11,9 @@ import {
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const NAME = "Dimas";
-const ROLE = "Frontend Developer";
-const words = ["antarmuka", "pengalaman", "interaksi", "produk digital"];
+const ROLE = "Fullstack Developer";
+const words = ["antarmuka", "aplikasi web", "pengalaman", "produk digital"];
+
 
 const stats = [
   { value: "10+", label: "Proyek Selesai" },
@@ -37,7 +38,6 @@ export function Hero() {
   }, []);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(
       () => setWordIndex((i) => (i + 1) % words.length),
       2200,
@@ -104,7 +104,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.28, duration: 0.85, ease }}
-          className="relative mt-8 font-display font-bold leading-[0.88] tracking-tight"
+          className="relative mt-8 cursor-default select-none font-display font-bold leading-[0.88] tracking-tight"
           style={{ fontSize: "clamp(2.8rem, 11vw, 9.5rem)" }}
         >
           <span className={hasPointer ? "text-line" : "text-fg"}>
